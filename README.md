@@ -1,36 +1,3 @@
-# 🚀 Get Started
-
-**This repo is where attendees go to continue their learning after your session — and your Copilot agent will help you set it up.**
-
-### Step 1: Open your repo
-
-Open this repo in a **Codespace** (click the green **Code** button → **Create a Codespace**) — or clone it locally. Then open **GitHub Copilot Chat**.
-
-### Step 2: Add your content
-
-Give the agent something to work with. Drag files into the Explorer panel — session abstracts, outlines, screenshots, notes — and drop them in one of two places:
-
-| Where to put it | What goes there | Who sees it |
-|---|---|---|
-| **`_remove-before-publish/`** | Internal reference materials (abstracts, outlines, screenshots, planning docs) | **Copilot only** — never published |
-| **`/docs/`, `/src/`, or repo root** | Lab instructions, demo code, sample data, getting-started guides | **Attendees** — published with the repo |
-
-> 💡 Not sure? Start by dropping your session abstract or outline into `_remove-before-publish/`. The agent will figure out what to do with it.
-
-### Step 3: Ask the Agent
-
-Once your content is in the repo, use these three phrases with Copilot to build out your session repo:
-
-| Phrase to use with Copilot | What it does | When to run it |
-|---|---|---|
-| **"Help me get started"** | Sets up session title, description, outcomes, and owners | After you've added your session abstract or outline to the repo |
-| **"Help me refine content"** | Organizes your session content into the repo | Each time you add or update content |
-| **"Help me finalize"** | Final review, cleanup, and publication prep | When you're ready to publish |
-
-> 💡 **These three phrases are just the starting point.** Copilot can do much more — try asking it to brainstorm next steps for attendees, generate code samples, or build out your repo structure. Don't be afraid to put it in plan mode and ask for what you need.
-
----
-
 <a name="start-building"></a>
 <br>
 <p align="center">
@@ -39,33 +6,24 @@ Once your content is in the repo, use these three phrases with Copilot to build 
 
 # [Microsoft Build 2026](https://build.microsoft.com)
 
-## 🔥 BRKXXX: SESSION TITLE
+## 🔥 BRK206: Your agent, anywhere: MultiClient, MultiDevice with GitHub Copilot SDK
+
+<img width='50%' alt="CopilotSDK" src="https://github.com/user-attachments/assets/0003609f-8ac5-43ed-bfea-4ab77498c57f" />
 
 ### Session Description
 
-*Add Session Description*
+Agents are powerful on your machine, but what happens when you need them everywhere else? In this session, we'll show how GitHub Copilot SDK lets you build an agent, embed it in an app, and take it with you across devices and into the cloud. You'll see how to go from a local agent to one you can access on your phone, move between machines, and run across multiple clients. If you've been working with agents locally and wondering what the next step looks like, this is it.
 
-### 🏫 Getting started in a guided session
-
-To get started in a guided lab session:
-- <!-- step 1 -->
-- <!-- step 2 -->
-- <!-- step 3 -->
-
-### 🏠 Getting started in your own environment
-
-If you're following these steps at your own pace:
-- Clone this repository
-- Set up your development environment
-- <!-- step 3 -->
+### Session Slides
+*Will be added soon*
 
 ### 🧠 Learning Outcomes
 
 By the end of this session, you will be able to:
 
-- <!-- outcome 1 -->
-- <!-- outcome 2 -->
-- <!-- outcome 3 -->
+- Embed GitHub Copilot's runtime into any app securely​
+- Understand multi-client, multi-device agent deployment ​
+- Know what is new in the new GA 1.0 GitHub Copilot SDK
 
 ### 💬 Keep Learning with Copilot
 
@@ -73,21 +31,18 @@ Try these prompts with GitHub Copilot to explore the topics from this session. O
 
 Use these as a starting point — or write your own!
 
-<!-- Prompts will be tailored to this session's content during repo setup. -->
-
-> *Prompts coming soon — check back after the session content is finalized.*
-
-### 💻 Technologies Used
-
-1. <!-- technology 1 -->
-1. <!-- technology 2 -->
-1. <!-- technology 3 -->
+- *What can I make with the GitHub Copilot SDK*
+- *What's new in the generally available Copilot SDK since public preview?*
+- *What languages is the Copilot SDK available in?*
+- *How do I set up authentication?*
 
 ### 📚 Resources and Next Steps
 
 | Resource | Description |
 |:---------|:------------|
-| [https://aka.ms/build26-next-steps](https://aka.ms/build26-next-steps) | Explore lab and session repos to further your learning from Microsoft Build |
+| [GitHub Copilot SDK Repo](https://github.com/github/copilot-sdk?utm_source=build-brk206-related-copilot-sdk-repo-cta&utm_medium=event&utm_campaign=msbuild-2026) | Access all Copilot SDK in all 6 languages |
+| [GitHub Copilot SDK Cookbooks](https://github.com/github/awesome-copilot?utm_source=build-brk206-related-awesome-copilot-cookbooks-cta&utm_medium=event&utm_campaign=msbuild-2026) | Custom agents, instructions, skills, hooks, workflows, and plugins|
+| [GitHub Copilot SDK Getting Started Guide](https://github.com/github/copilot-sdk/blob/main/docs/getting-started.md?utm_source=build-brk206-related-sdk-getting-started-cta&utm_medium=event&utm_campaign=msbuild-2026) | Build your first Copilot-powered app|
 
 
 ### 🌟 Microsoft Learn MCP Server
@@ -115,10 +70,15 @@ For more info, other clients, and to post questions, visit the [Learn MCP Server
 
 <table>
 <tr>
-    <td align="center"><a href="http://github.com/yourGitHubHandle">
-        <img src="https://github.com/yourGitHubHandle.png" width="100px;" alt="INSERT NAME HERE"/><br />
-        <sub><b>INSERT NAME HERE</b></sub></a><br />
-            <a href="https://github.com/yourGitHubHandle" title="talk">📢</a>
+    <td align="center"><a href="http://github.com/patniko">
+        <img src="https://github.com/patniko.png" width="100px;" alt="Patrick Nikoletich"/><br />
+        <sub><b>Patrick Nikoletich</b></sub></a><br />
+            <a href="https://github.com/patniko" title="Distinguished Product Manager">📢</a>
+    </td>
+     <td align="center"><a href="http://github.com/stevesandersonms">
+        <img src="https://github.com/stevesandersonms.png" width="100px;" alt="Steve Sanderson"/><br />
+        <sub><b>Steve Sanderson</b></sub></a><br />
+            <a href="https://github.com/patniko" title="Principal Software Engineer">📢</a>
     </td>
 </tr></table>
 
