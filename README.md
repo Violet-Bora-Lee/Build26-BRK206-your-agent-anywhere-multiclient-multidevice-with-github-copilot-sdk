@@ -8,6 +8,11 @@
 
 ## 🔥 BRK206: Your agent, anywhere: MultiClient, MultiDevice with GitHub Copilot SDK
 
+> This repository is a remix of the original
+> [microsoft/Build26-BRK206-your-agent-anywhere-multiclient-multidevice-with-github-copilot-sdk](https://github.com/microsoft/Build26-BRK206-your-agent-anywhere-multiclient-multidevice-with-github-copilot-sdk).
+> It adds demo-focused updates including Korean sample prompts, dashboard queue/status improvements,
+> persistent completed tasks, a resizable dashboard panel, and an on-screen QR code for the remixed repo.
+
 <img width='50%' alt="CopilotSDK" src="https://github.com/user-attachments/assets/0003609f-8ac5-43ed-bfea-4ab77498c57f" />
 
 ### Session Description
