@@ -12,7 +12,7 @@
 
 <div class="flex h-screen overflow-hidden font-sans">
     @* Pipeline panel *@
-    <div class="flex-1 px-8 pt-3 overflow-y-auto relative"
+    <div class="min-w-[35rem] flex-1 px-8 pt-3 overflow-y-auto relative"
          style="background-color: #17171b;
                 background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px);
                 background-size: 20px 20px;">
@@ -160,8 +160,13 @@
         </div>
     </div>
 
+    <div class="w-1.5 shrink-0 cursor-col-resize bg-slate-200 transition-colors hover:bg-indigo-400 active:bg-indigo-500 z-40"
+         title="Drag to resize dashboard"
+         onpointerdown="window.startSidebarResize(event, document.getElementById('dashboard-sidebar'))">
+    </div>
+
     @* Sidebar — always visible *@
-    <div @ref="_sidebar" class="w-[28rem] bg-white p-7 overflow-y-auto shadow-[-8px_0_30px_-4px_rgba(0,0,0,0.15)] z-30">
+    <div id="dashboard-sidebar" @ref="_sidebar" class="w-[28rem] shrink-0 bg-white p-7 overflow-y-auto shadow-[-8px_0_30px_-4px_rgba(0,0,0,0.15)] z-30">
         @if (_selectedAgent is not null)
         {
             var sNode = PipelineConfig.Nodes[_selectedAgent.Phase];
@@ -329,6 +334,7 @@
         if (!_sidebarAutoScrollSetup)
         {
             _sidebarAutoScrollSetup = true;
+            await JS.InvokeVoidAsync("setupResizableSidebar", _sidebar);
             await JS.InvokeVoidAsync("setupAutoScrollEnd", _sidebar);
         }
     }

@@ -43,6 +43,46 @@
             });
             obs.observe(el, { childList: true, subtree: true, characterData: true });
         };
+
+        window.setupResizableSidebar = function (sidebar) {
+            if (!sidebar) return;
+            const savedWidth = Number(localStorage.getItem('dashboardSidebarWidth'));
+            if (Number.isFinite(savedWidth) && savedWidth > 0) {
+                sidebar.style.width = `${savedWidth}px`;
+            }
+        };
+
+        window.startSidebarResize = function (event, sidebar) {
+            if (!sidebar) return;
+            event.preventDefault();
+
+            const minSidebarWidth = 320;
+            const minMainWidth = 560;
+            const maxSidebarWidth = () => Math.max(minSidebarWidth, window.innerWidth - minMainWidth);
+
+            const resize = (clientX) => {
+                const width = Math.min(Math.max(window.innerWidth - clientX, minSidebarWidth), maxSidebarWidth());
+                sidebar.style.width = `${width}px`;
+                localStorage.setItem('dashboardSidebarWidth', String(width));
+            };
+
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            resize(event.clientX);
+
+            const onPointerMove = (moveEvent) => resize(moveEvent.clientX);
+            const onPointerUp = () => {
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                window.removeEventListener('pointermove', onPointerMove);
+                window.removeEventListener('pointerup', onPointerUp);
+                window.removeEventListener('pointercancel', onPointerUp);
+            };
+
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('pointerup', onPointerUp);
+            window.addEventListener('pointercancel', onPointerUp);
+        };
     </script>
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["AgentOrchestrator.styles.css"]" />
