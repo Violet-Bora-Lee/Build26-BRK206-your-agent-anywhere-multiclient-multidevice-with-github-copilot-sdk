@@ -49,6 +49,27 @@ Use these as a starting point — or write your own!
 | [GitHub Copilot SDK Cookbooks](https://github.com/github/awesome-copilot?utm_source=build-brk206-related-awesome-copilot-cookbooks-cta&utm_medium=event&utm_campaign=msbuild-2026) | Custom agents, instructions, skills, hooks, workflows, and plugins|
 | [GitHub Copilot SDK Getting Started Guide](https://github.com/github/copilot-sdk/blob/main/docs/getting-started.md?utm_source=build-brk206-related-sdk-getting-started-cta&utm_medium=event&utm_campaign=msbuild-2026) | Build your first Copilot-powered app|
 
+### 🚀 Deployment Notes
+
+This demo is a .NET Blazor Server app that uses SignalR/WebSockets, the GitHub Copilot SDK,
+and a local SQLite database seeded from JSON files. It is not a static web app, so deploy it
+to a service that can run an ASP.NET Core server process.
+
+| Option | What it uses | Estimated setup time | Estimated cost |
+|:-------|:-------------|:---------------------|:---------------|
+| Azure App Service (recommended for demos) | App Service Plan, Linux Web App, WebSockets enabled, application logs | 30-60 minutes | Basic B1 is roughly $13-20 USD/month depending on region |
+| Azure Container Apps | Container Apps Environment, Container App, image registry, HTTP ingress | 1-2 hours | Consumption can be very low for light usage, but always-on demos may vary by active vCPU/memory seconds |
+
+Deployment considerations:
+
+- Enable WebSockets for Blazor Server/SignalR when using Azure App Service.
+- Move the SQLite database path from the app binary directory to persistent writable storage
+  such as `/home/data/properties.db` on App Service.
+- Keep credentials and tokens out of the repository. Use environment variables or platform
+  configuration for any deployment-time secrets.
+- For a short-lived conference demo, App Service is the simplest and most predictable option.
+  Container Apps is a good alternative if you already have a container workflow.
+
 ### Related Labs
 
 | Lab | Title | Repo |
