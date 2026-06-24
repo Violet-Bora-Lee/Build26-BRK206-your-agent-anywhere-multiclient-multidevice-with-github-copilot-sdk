@@ -4,17 +4,13 @@ using System.Threading;
 
 namespace AgentOrchestrator;
 
-public class AppState(PropertyDatabase propertyDatabase)
+public class AppState(PropertyDatabase propertyDatabase, IWebHostEnvironment environment)
 {
     private int totalCompleted;
     private int totalRejected;
     private readonly ConcurrentDictionary<string, byte> countedOutcomes = new();
 
-    private readonly CopilotClient copilotClient = new CopilotClient(new()
-    {
-        Mode = CopilotClientMode.Empty,
-        BaseDirectory = Path.Combine(AppContext.BaseDirectory, ".copilot"),
-    });
+    private readonly CopilotClient copilotClient = CreateCopilotClient(environment);
 
     public ConcurrentDictionary<string, Agent> Agents { get; } = new();
     public int TotalCompleted => totalCompleted;
@@ -45,6 +41,19 @@ public class AppState(PropertyDatabase propertyDatabase)
 
     public void NotifyChanged()
         => UpdateUi?.Invoke();
+
+    private static CopilotClient CreateCopilotClient(IWebHostEnvironment environment)
+    {
+        var directory = environment.IsDevelopment()
+            ? AppContext.BaseDirectory
+            : Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? AppContext.BaseDirectory, "data");
+        Directory.CreateDirectory(directory);
+        return new(new()
+        {
+            Mode = CopilotClientMode.Empty,
+            BaseDirectory = Path.Combine(directory, ".copilot"),
+        });
+    }
 
     private void OnAgentChanged(Agent agent)
     {
