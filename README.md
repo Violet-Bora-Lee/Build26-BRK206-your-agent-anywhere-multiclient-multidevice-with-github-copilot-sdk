@@ -15,6 +15,8 @@
 
 영어 README: [README.en.md](README.en.md)
 
+라이브 데모: [https://brk206-violet-06241731.azurewebsites.net/](https://brk206-violet-06241731.azurewebsites.net/)
+
 <img width='50%' alt="CopilotSDK" src="https://github.com/user-attachments/assets/0003609f-8ac5-43ed-bfea-4ab77498c57f" />
 
 ### 세션 설명
