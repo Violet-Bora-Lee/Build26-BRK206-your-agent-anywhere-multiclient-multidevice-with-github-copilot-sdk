@@ -28,7 +28,13 @@
             @if (_showAddMenu)
             {
                 <div class="absolute right-0 top-full mt-1 w-[28rem] bg-zinc-900 rounded-md shadow-xl border border-zinc-700 py-1 max-h-96 overflow-y-auto">
-                    <div class="px-3 py-2 text-sm font-medium text-zinc-500">Sample enquiries</div>
+                    <div class="px-3 py-2 flex items-center justify-between gap-3">
+                        <div class="text-sm font-medium text-zinc-500">Sample enquiries</div>
+                        <button class="text-sm text-indigo-300 hover:text-indigo-200 cursor-pointer"
+                                @onclick="SubmitAllEnquiries">
+                            Queue all
+                        </button>
+                    </div>
                     @foreach (var enquiry in SampleEnquiries)
                     {
                         <button class="w-full text-left px-3 py-2 text-lg text-zinc-300 hover:bg-zinc-800 cursor-pointer leading-snug"
@@ -121,10 +127,6 @@
                 var isRejected = node.IsFinished && agent.Phase != Phase.Done;
                 var isDone = agent.Phase == Phase.Done;
 
-                var isFading = IsFinished(agent) && agent.Phase != Phase.Done
-                    && agent.FinishedAt.HasValue
-                    && (DateTime.UtcNow - agent.FinishedAt.Value).TotalSeconds > 12;
-
                 var isBusy = !IsFinished(agent);
                 var dotColor   = isDone     ? "text-emerald-400" :
                                  isRejected ? "text-rose-400" :
@@ -138,7 +140,7 @@
                         class="absolute z-20 flex flex-col justify-start cursor-pointer text-left rounded-md pl-4 pr-5 pt-2.5 pb-2
                                @(isSelected ? "bg-indigo-500/20 hover:bg-indigo-500/25 ring-1 ring-indigo-400" :
                                  "bg-zinc-700 hover:bg-zinc-600")"
-                        style="top: @(y)px; left: @(x)px; width: @(ChipWidth)px; height: @(ChipHeight - 4)px; opacity: @(isFading ? "0" : "1"); transition: top 0.7s cubic-bezier(0.76, 0, 0.24, 1), left 0.7s cubic-bezier(0.76, 0, 0.24, 1), opacity @(isFading ? "2s ease-in" : "0.3s"), background-color 0.15s"
+                        style="top: @(y)px; left: @(x)px; width: @(ChipWidth)px; height: @(ChipHeight - 4)px; transition: top 0.7s cubic-bezier(0.76, 0, 0.24, 1), left 0.7s cubic-bezier(0.76, 0, 0.24, 1), background-color 0.15s"
                         @onclick="() => SelectAgent(agent.Id)">
                     <div class="flex items-center gap-2.5 min-w-0">
                         <span class="relative inline-flex h-3 w-3 shrink-0 @dotColor">
@@ -245,6 +247,13 @@
             <h3 class="text-base font-semibold tracking-widest uppercase text-slate-400 mb-6">Dashboard</h3>
             <div class="space-y-4">
                 <div class="flex items-center gap-5 bg-slate-50 rounded-xl p-5 border border-slate-100">
+                    <div class="w-2 h-16 rounded-full bg-sky-400"></div>
+                    <div>
+                        <div class="text-5xl font-bold text-slate-800">@GetQueuedCount()</div>
+                        <div class="text-xl text-slate-400 mt-1">Queued</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-5 bg-slate-50 rounded-xl p-5 border border-slate-100">
                     <div class="w-2 h-16 rounded-full bg-indigo-400"></div>
                     <div>
                         <div class="text-5xl font-bold text-slate-800">@GetActiveCount()</div>
@@ -346,8 +355,16 @@
 
     private void SubmitEnquiry(string enquiry)
     {
-        _showAddMenu = false;
         _ = AppState.RunAgentAsync(enquiry);
+    }
+
+    private void SubmitAllEnquiries()
+    {
+        _showAddMenu = false;
+        foreach (var enquiry in SampleEnquiries)
+        {
+            _ = AppState.RunAgentAsync(enquiry);
+        }
     }
 
     private List<Agent> GetAllAgents()
@@ -372,9 +389,10 @@
         return $"{(int)elapsed.TotalHours}h ago";
     }
 
-    private int GetActiveCount() => AppState.Agents.Values.Count(a => !IsFinished(a));
-    private int GetDoneCount() => AppState.Agents.Values.Count(a => a.Phase == Phase.Done);
-    private int GetRejectedCount() => AppState.Agents.Values.Count(a => IsFinished(a) && a.Phase != Phase.Done);
+    private int GetQueuedCount() => AppState.Agents.Values.Count(a => a.Phase == Phase.Queued);
+    private int GetActiveCount() => AppState.Agents.Values.Count(a => a.Phase != Phase.Queued && !IsFinished(a));
+    private int GetDoneCount() => AppState.TotalCompleted;
+    private int GetRejectedCount() => AppState.TotalRejected;
 
     private static bool IsFinished(Agent agent)
     {

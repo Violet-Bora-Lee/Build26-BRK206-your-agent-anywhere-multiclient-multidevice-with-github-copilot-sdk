@@ -2,7 +2,7 @@ using GitHub.Copilot;
 
 namespace AgentOrchestrator;
 
-public class Agent(string id, string enquiry, PropertyDatabase database, Action updateUi) : IAsyncDisposable
+public class Agent(string id, string enquiry, PropertyDatabase database, Action<Agent> updateUi) : IAsyncDisposable
 {
     public string Id => id;
     public string Enquiry => enquiry;
@@ -12,7 +12,7 @@ public class Agent(string id, string enquiry, PropertyDatabase database, Action 
     public DateTime StartedAt { get; } = DateTime.UtcNow;
     public DateTime? FinishedAt { get; set; }
     public List<SessionEvent> SessionEvents { get; } = new();
-    private CopilotSession Session { get; set; } = default!;
+    private CopilotSession? Session { get; set; }
 
     public async Task RunAsync(CopilotClient client)
     {
@@ -70,7 +70,7 @@ public class Agent(string id, string enquiry, PropertyDatabase database, Action 
         Session.On<SessionEvent>(evt =>
         {
             SessionEvents.Add(evt);
-            updateUi();
+            updateUi(this);
         });
         
         await Session.SendAndWaitAsync($"<enquiry>{Enquiry}</enquiry>");
@@ -81,7 +81,7 @@ public class Agent(string id, string enquiry, PropertyDatabase database, Action 
     private void SetCurrentPhase(Phase phase)
     {
         Phase = phase;
-        updateUi();
+        updateUi(this);
     }
     
     [DisplayName("report_intent")]
@@ -89,8 +89,8 @@ public class Agent(string id, string enquiry, PropertyDatabase database, Action 
     private void ReportIntent([Description("Intent in max 4 words")] string intent)
     {
         CurrentIntent = intent;
-        updateUi();
+        updateUi(this);
     }
 
-    public ValueTask DisposeAsync() => Session.DisposeAsync();
+    public ValueTask DisposeAsync() => Session?.DisposeAsync() ?? ValueTask.CompletedTask;
 }

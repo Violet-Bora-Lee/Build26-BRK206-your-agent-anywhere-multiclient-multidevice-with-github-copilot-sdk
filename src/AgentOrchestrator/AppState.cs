@@ -1,22 +1,30 @@
 using GitHub.Copilot;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace AgentOrchestrator;
 
 public class AppState(PropertyDatabase propertyDatabase)
 {
+    private int totalCompleted;
+    private int totalRejected;
+    private readonly ConcurrentDictionary<string, byte> countedOutcomes = new();
+
     private readonly CopilotClient copilotClient = new CopilotClient(new()
     {
         Mode = CopilotClientMode.Empty,
         BaseDirectory = Path.Combine(AppContext.BaseDirectory, ".copilot"),
     });
 
-    public Dictionary<string, Agent> Agents { get; } = new();
+    public ConcurrentDictionary<string, Agent> Agents { get; } = new();
+    public int TotalCompleted => totalCompleted;
+    public int TotalRejected => totalRejected;
     public event Action? UpdateUi;
 
     public async Task RunAgentAsync(string enquiry)
     {
         var agentId = Guid.NewGuid().ToString("N")[..8];
-        var agent = new Agent(agentId, enquiry, propertyDatabase, NotifyChanged);
+        var agent = new Agent(agentId, enquiry, propertyDatabase, OnAgentChanged);
         Agents[agentId] = agent;
         NotifyChanged();
         Console.WriteLine($"Created agent {agentId}");
@@ -24,34 +32,49 @@ public class AppState(PropertyDatabase propertyDatabase)
         try
         {
             await agent.RunAsync(copilotClient);
-            agent.FinishedAt = DateTime.UtcNow;
-            NotifyChanged();
-
-            if (agent.Phase == Phase.Done)
-            {
-                // For demo, successful agents stay on screen forever
-                return;
-            }
-
-            // Rejected agents linger for 15s then get removed
-            await Task.Delay(15000);
-            if (Agents.Remove(agentId, out _))
-            {
-                await agent.DisposeAsync();
-            }
+            CountOutcomeIfFinished(agent);
             NotifyChanged();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error running agent {agentId}: {ex}");
-            if (Agents.Remove(agentId, out _))
-            {
-                await agent.DisposeAsync();
-            }
+            CountRejected(agentId);
             NotifyChanged();
         }
     }
 
     public void NotifyChanged()
         => UpdateUi?.Invoke();
+
+    private void OnAgentChanged(Agent agent)
+    {
+        CountOutcomeIfFinished(agent);
+        NotifyChanged();
+    }
+
+    private void CountOutcomeIfFinished(Agent agent)
+    {
+        if (!PipelineConfig.Nodes[agent.Phase].IsFinished || !countedOutcomes.TryAdd(agent.Id, 0))
+        {
+            return;
+        }
+
+        agent.FinishedAt ??= DateTime.UtcNow;
+        if (agent.Phase == Phase.Done)
+        {
+            Interlocked.Increment(ref totalCompleted);
+        }
+        else
+        {
+            Interlocked.Increment(ref totalRejected);
+        }
+    }
+
+    private void CountRejected(string agentId)
+    {
+        if (countedOutcomes.TryAdd(agentId, 0))
+        {
+            Interlocked.Increment(ref totalRejected);
+        }
+    }
 }
