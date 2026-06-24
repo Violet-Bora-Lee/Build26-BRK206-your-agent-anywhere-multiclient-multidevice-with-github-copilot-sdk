@@ -26,6 +26,11 @@ public class Agent(string id, string enquiry, PropertyDatabase database, Action 
             and you must carry out the following workflow. As you proceed, you will update your current phase
             and intent, which will be visible to the user. Do not stop until the phase reaches a final state.
             Start by setting phase to "validating".
+
+            IMPORTANT: Always write ALL human-readable output in Korean (한국어). This includes every intent
+            you report, every assistant message, and the final salesperson report. Korean is the only language
+            for your output. (Tool/function names, enum phase values, and property search filter values stay in
+            English, but any free text you write must be Korean.)
         
             - Validation phase
               - Check the enquiry is genuine and not spam, garbage, or off-topic.
